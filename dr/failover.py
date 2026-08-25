@@ -35,13 +35,75 @@ LOG = pathlib.Path("reports/failover-events.jsonl")
 
 
 def emit(**kw):
-    """TODO: append 1 dòng JSONL có ts + iso vào LOG, và print ra stdout."""
-    raise NotImplementedError
+    """Append 1 dòng JSONL có ts + iso vào LOG, và print ra stdout."""
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    rec = {"ts": time.time(), "iso": time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()), **kw}
+    with LOG.open("a") as f:
+        f.write(json.dumps(rec) + "\n")
+    print("FAILOVER", json.dumps(rec))
+    return rec
 
 
 def failover(target: str, backend: str, wait: float) -> dict:
-    """TODO: 5 bước ở trên, đúng thứ tự."""
-    raise NotImplementedError
+    """5 bước theo thứ tự: verify -> restore -> scale -> wait_ready -> dns_cutover."""
+    primary = "a" if target == "b" else "b"
+    events = []
+
+    # 1_verify_target
+    try:
+        vstate = httpx.get(f"{URL[target]}/v1/state", timeout=5).json()
+    except Exception as e:
+        vstate = {"error": type(e).__name__}
+    events.append(emit(step="1_verify_target", target=target, state=vstate))
+
+    # 2_restore_snapshot
+    meta = snapshot.get(target, backend)
+    rpo_info = snapshot.rpo(pathlib.Path(f"state/region-{primary}/vectors.sqlite"),
+                             pathlib.Path(f"state/region-{target}/vectors.sqlite"))
+    events.append(emit(step="2_restore_snapshot", target=target,
+                        rpo_seconds=rpo_info["rpo_seconds"], docs_lost=rpo_info["docs_lost"],
+                        embed_model_version=meta.get("embed_model_version")))
+
+    # 3_scale_pool
+    pool_file = pathlib.Path(f"state/region-{target}/pool_state")
+    pool_file.parent.mkdir(parents=True, exist_ok=True)
+    pool_file.write_text("full")
+    events.append(emit(step="3_scale_pool", target=target, pool_state="full"))
+
+    # 4_wait_ready
+    deadline = time.time() + wait
+    ready, last_reasons = False, None
+    while time.time() < deadline:
+        try:
+            body = httpx.get(f"{URL[target]}/readyz", timeout=2).json()
+            if body.get("ready"):
+                ready = True
+                break
+            last_reasons = body.get("reasons")
+        except Exception as e:
+            last_reasons = type(e).__name__
+        time.sleep(0.5)
+    events.append(emit(step="4_wait_ready", target=target, ready=ready, reasons=last_reasons))
+
+    if not ready:
+        events.append(emit(step="abort", target=target, reason="wait_ready_timeout"))
+        return {"ok": False, "target": target, "reason": "wait_ready_timeout",
+                "rpo_seconds": rpo_info["rpo_seconds"], "docs_lost": rpo_info["docs_lost"],
+                "events": events}
+
+    # 5_dns_cutover — CHỈ đổi DNS sau khi target đã ready.
+    pathlib.Path("edge/active_region").write_text(target)
+    events.append(emit(step="5_dns_cutover", target=target, active_region=target))
+
+    try:
+        target_state_after = httpx.get(f"{URL[target]}/v1/state", timeout=5).json()
+    except Exception as e:
+        target_state_after = {"error": type(e).__name__}
+
+    return {"ok": True, "target": target, "backend": backend,
+            "rpo_seconds": rpo_info["rpo_seconds"], "docs_lost": rpo_info["docs_lost"],
+            "embed_model_version": meta.get("embed_model_version"),
+            "target_state_after": target_state_after, "events": events}
 
 
 if __name__ == "__main__":

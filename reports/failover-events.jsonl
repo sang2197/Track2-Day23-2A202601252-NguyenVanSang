@@ -1,0 +1,30 @@
+{"ts": 1787651085.2123203, "iso": "2026-08-25T09:44:45", "step": "1_verify_target", "target": "b", "state": {"region": "b", "pool_state": "warm", "weights": true, "count": 208, "latest_doc_ts": 1787650882.3890417, "ts": 1787651085.211125}}
+{"ts": 1787651085.270677, "iso": "2026-08-25T09:44:45", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": 6.0, "docs_lost": 3, "embed_model_version": "embed-model=vi-e5-base@v3"}
+{"ts": 1787651085.2757173, "iso": "2026-08-25T09:44:45", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787651091.5084805, "iso": "2026-08-25T09:44:51", "step": "4_wait_ready", "target": "b", "ready": true, "reasons": ["warming_up_0.3s_left"]}
+{"ts": 1787651091.5132174, "iso": "2026-08-25T09:44:51", "step": "5_dns_cutover", "target": "b", "active_region": "b"}
+{"ts": 1787651211.9678779, "iso": "2026-08-25T09:46:51", "step": "1_verify_target", "target": "b", "state": {"error": "ConnectError"}}
+{"ts": 1787651211.988828, "iso": "2026-08-25T09:46:51", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": 118.01, "docs_lost": 59, "embed_model_version": "test"}
+{"ts": 1787651211.997205, "iso": "2026-08-25T09:46:51", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787651213.0146313, "iso": "2026-08-25T09:46:53", "step": "4_wait_ready", "target": "b", "ready": false, "reasons": "ConnectError"}
+{"ts": 1787651213.0177467, "iso": "2026-08-25T09:46:53", "step": "abort", "target": "b", "reason": "wait_ready_timeout"}
+{"ts": 1787651350.4853477, "iso": "2026-08-25T09:49:10", "step": "1_verify_target", "target": "b", "state": {"error": "ConnectError"}}
+{"ts": 1787651350.5022593, "iso": "2026-08-25T09:49:10", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": null, "docs_lost": null, "embed_model_version": "test"}
+{"ts": 1787651350.5136828, "iso": "2026-08-25T09:49:10", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787651351.524437, "iso": "2026-08-25T09:49:11", "step": "4_wait_ready", "target": "b", "ready": false, "reasons": "ConnectError"}
+{"ts": 1787651351.528001, "iso": "2026-08-25T09:49:11", "step": "abort", "target": "b", "reason": "wait_ready_timeout"}
+{"ts": 1787651644.930997, "iso": "2026-08-25T09:54:04", "step": "1_verify_target", "target": "b", "state": {"error": "ConnectError"}}
+{"ts": 1787651644.9465125, "iso": "2026-08-25T09:54:04", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": null, "docs_lost": null, "embed_model_version": "test"}
+{"ts": 1787651644.954798, "iso": "2026-08-25T09:54:04", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787651645.9700668, "iso": "2026-08-25T09:54:05", "step": "4_wait_ready", "target": "b", "ready": false, "reasons": "ConnectError"}
+{"ts": 1787651645.9738553, "iso": "2026-08-25T09:54:05", "step": "abort", "target": "b", "reason": "wait_ready_timeout"}
+{"ts": 1787652447.786767, "iso": "2026-08-25T10:07:27", "step": "1_verify_target", "target": "b", "state": {"error": "ConnectError"}}
+{"ts": 1787652447.8024583, "iso": "2026-08-25T10:07:27", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": null, "docs_lost": null, "embed_model_version": "test"}
+{"ts": 1787652447.8110137, "iso": "2026-08-25T10:07:27", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787652448.8230634, "iso": "2026-08-25T10:07:28", "step": "4_wait_ready", "target": "b", "ready": false, "reasons": "ConnectError"}
+{"ts": 1787652448.8259273, "iso": "2026-08-25T10:07:28", "step": "abort", "target": "b", "reason": "wait_ready_timeout"}
+{"ts": 1787653902.3024204, "iso": "2026-08-25T10:31:42", "step": "1_verify_target", "target": "b", "state": {"error": "ConnectError"}}
+{"ts": 1787653902.3184297, "iso": "2026-08-25T10:31:42", "step": "2_restore_snapshot", "target": "b", "rpo_seconds": null, "docs_lost": null, "embed_model_version": "test"}
+{"ts": 1787653902.330677, "iso": "2026-08-25T10:31:42", "step": "3_scale_pool", "target": "b", "pool_state": "full"}
+{"ts": 1787653903.340392, "iso": "2026-08-25T10:31:43", "step": "4_wait_ready", "target": "b", "ready": false, "reasons": "ConnectError"}
+{"ts": 1787653903.3441784, "iso": "2026-08-25T10:31:43", "step": "abort", "target": "b", "reason": "wait_ready_timeout"}
